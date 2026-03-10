@@ -1,33 +1,29 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
     <title>repl.it</title>
     <link href="style.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
     <h1>My Page</h1>
 
-    <input type="button" id="alertBtn" value="alert" onclick="alertFun()"/>
-    <input type="button" value="confirm" onclick="confirmFun()"/>
-    <input type="button" value="prompt" onclick="promptFun()"/>
+    <input type="button" id="alertBtn" value="alert" onclick="alertFun()" />
+    <input type="button" value="confirm" onclick="confirmFun()" />
+    <input type="button" value="prompt" onclick="promptFun()" />
 
     <span id="result"></span>
 
-    <script>
-       function alertFun(){
-    alert("Hello !");
-   }
+    <h2>Task 5: DOM Event Listeners</h2>
+    <input id="myBtn" type="button" onclick="myFun()" value="click me" />
 
-   function confirmFun(){
-     let didConfirm = confirm("Are you sure about that?");
-     if(didConfirm){
-       alert("You confirmed :)");
-     }else{
-      alert("You did not confirm :(");
-     }
-   }
+  <h2>Exercise</h2>
+    <img
+      id="cageImg"
+      src="https://www.placecage.com/300/200"
+      alt="Nicolas Cage placeholder"
+    />
 
    function promptFun(){
     let val = prompt("What is your name?");
