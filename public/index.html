@@ -1,91 +1,83 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
     />
-    <title>Demo</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AJAX Brewery Demo</title>
   </head>
 
-  <body>
+  <body class="grey lighten-4">
     <nav>
       <div class="nav-wrapper teal" style="padding-left: 10px">
-        <a href="#!" class="brand-logo">Ajax Demo</a>
+        <a href="#!" class="brand-logo">AJAX Demo - Brewery Search</a>
       </div>
     </nav>
 
-    <main class="row" style="padding: 40px">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>name</th>
-            <th>Type</th>
-            <th>website</th>
-          </tr>
-        </thead>
-        <tbody id="result"></tbody>
-      </table>
-
-      <section id="details" style="margin-top: 2rem"></section>
+    <main class="container" style="padding: 32px 0">
+      <div class="card">
+        <div class="card-content">
+          <span class="card-title">Search Results for "harry"</span>
+          <p id="status" class="grey-text text-darken-1">Loading brewery data...</p>
+          <div class="responsive-table" style="margin-top: 1rem">
+            <table class="striped highlight">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Type</th>
+                  <th>City</th>
+                  <th>State</th>
+                  <th>Country</th>
+                  <th>Website</th>
+                </tr>
+              </thead>
+              <tbody id="result"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </main>
 
     <script>
-      async function getData(url, renderFun) {
-        try {
-          const response = await fetch(url);
-          const result = await response.json();
-          renderFun(result);
-        } catch (e) {
-          console.log(e);
-        }
-      }
-
       function drawTable(records) {
-        const result = document.querySelector('#result');
+        let result = document.querySelector('#result');
+        let status = document.querySelector('#status');
         let html = '';
 
-        for (const record of records) {
-          html += `<tr id="${record.id}">
-            <td>${record.id}</td>
-            <td>${record.name}</td>
-            <td>${record.brewery_type}</td>
-            <td>
-              <a href="#${record.id}" onclick="getData('https://api.openbrewerydb.org/breweries/${record.id}', drawDetails)">
-                View More Details
-              </a>
-            </td>
+        for (let record of records) {
+          html += `<tr>
+            <td>${record.id ?? ''}</td>
+            <td>${record.name ?? ''}</td>
+            <td>${record.brewery_type ?? ''}</td>
+            <td>${record.city ?? ''}</td>
+            <td>${record.state ?? ''}</td>
+            <td>${record.country ?? ''}</td>
+            <td>${record.website_url ? `<a href="${record.website_url}" target="_blank" rel="noreferrer">Visit</a>` : ''}</td>
           </tr>`;
         }
 
         result.innerHTML = html;
+        status.textContent = `Loaded ${records.length} record(s).`;
       }
 
-      function drawDetails(record) {
-        const details = document.querySelector('#details');
-
-        details.innerHTML = `
-          <div class="card">
-            <div class="card-content">
-              <span class="card-title">${record.name}</span>
-              <p><strong>ID:</strong> ${record.id}</p>
-              <p><strong>Type:</strong> ${record.brewery_type ?? 'N/A'}</p>
-              <p><strong>City:</strong> ${record.city ?? 'N/A'}</p>
-              <p><strong>State:</strong> ${record.state ?? 'N/A'}</p>
-              <p><strong>Phone:</strong> ${record.phone ?? 'N/A'}</p>
-              <p>
-                <strong>Website:</strong>
-                ${record.website_url ? `<a href="${record.website_url}" target="_blank" rel="noreferrer">${record.website_url}</a>` : 'N/A'}
-              </p>
-            </div>
-          </div>
-        `;
+      // function MUST be declared async
+      async function getData(url) {
+        try {
+          let response = await fetch(url); //1. Send http request and get response
+          let result = await response.json(); //2. Get data from response
+          drawTable(result); //3. Do something with the data
+        } catch (e) {
+          console.log(e); //catch and log any errors
+          document.querySelector('#status').textContent = 'Unable to load data.';
+        }
       }
 
-      getData('https://api.openbrewerydb.org/breweries', drawTable);
+      getData('https://api.openbrewerydb.org/breweries/search?query=harry');
     </script>
   </body>
 </html>
