@@ -16,6 +16,7 @@
         <a href="#!" class="brand-logo">Ajax Demo</a>
       </div>
     </nav>
+
     <main class="row" style="padding: 40px">
       <table>
         <thead>
@@ -28,69 +29,63 @@
         </thead>
         <tbody id="result"></tbody>
       </table>
+
+      <section id="details" style="margin-top: 2rem"></section>
     </main>
+
     <script>
+      async function getData(url, renderFun) {
+        try {
+          const response = await fetch(url);
+          const result = await response.json();
+          renderFun(result);
+        } catch (e) {
+          console.log(e);
+        }
+      }
+
       function drawTable(records) {
-        let result = document.querySelector('#result');
+        const result = document.querySelector('#result');
         let html = '';
 
-        for (let record of records) {
-          html += `<tr>
-          <td>${record.id}</td>
-          <td>${record.name}</td>
-          <td>${record.brewery_type}</td>
-          <td>${record.website_url ?? ''}</td>
-        </tr>`;
+        for (const record of records) {
+          html += `<tr id="${record.id}">
+            <td>${record.id}</td>
+            <td>${record.name}</td>
+            <td>${record.brewery_type}</td>
+            <td>
+              <a href="#${record.id}" onclick="getData('https://api.openbrewerydb.org/breweries/${record.id}', drawDetails)">
+                View More Details
+              </a>
+            </td>
+          </tr>`;
         }
 
         result.innerHTML = html;
       }
 
-      async function loadData() {
-        const fallbackRecords = [
-          {
-            id: 3042,
-            name: "Mason's Brewing Company",
-            brewery_type: 'micro',
-            website_url: 'http://www.masonsbrewingcompany.com',
-          },
-          {
-            id: 1808,
-            name: 'Barrie Brewing Company',
-            brewery_type: 'planning',
-            website_url: null,
-          },
-          {
-            id: 6135,
-            name: 'Harty Brewing Company',
-            brewery_type: 'brewpub',
-            website_url: 'http://www.hartybrewco.com',
-          },
-          {
-            id: 7283,
-            name: 'Sunken City Brewing Co',
-            brewery_type: 'micro',
-            website_url: 'http://www.sunkencitybeer.com',
-          },
-          {
-            id: 2407,
-            name: 'Hairy Cow Brewing Co, LLC',
-            brewery_type: 'planning',
-            website_url: 'http://www.hairycowbrewing.com',
-          },
-        ];
+      function drawDetails(record) {
+        const details = document.querySelector('#details');
 
-        try {
-          const response = await fetch('https://api.openbrewerydb.org/breweries?per_page=5');
-          const records = await response.json();
-          drawTable(records);
-        } catch (error) {
-          console.error('Unable to fetch brewery data, using fallback records.', error);
-          drawTable(fallbackRecords);
-        }
+        details.innerHTML = `
+          <div class="card">
+            <div class="card-content">
+              <span class="card-title">${record.name}</span>
+              <p><strong>ID:</strong> ${record.id}</p>
+              <p><strong>Type:</strong> ${record.brewery_type ?? 'N/A'}</p>
+              <p><strong>City:</strong> ${record.city ?? 'N/A'}</p>
+              <p><strong>State:</strong> ${record.state ?? 'N/A'}</p>
+              <p><strong>Phone:</strong> ${record.phone ?? 'N/A'}</p>
+              <p>
+                <strong>Website:</strong>
+                ${record.website_url ? `<a href="${record.website_url}" target="_blank" rel="noreferrer">${record.website_url}</a>` : 'N/A'}
+              </p>
+            </div>
+          </div>
+        `;
       }
 
-      loadData();
+      getData('https://api.openbrewerydb.org/breweries', drawTable);
     </script>
   </body>
 </html>
