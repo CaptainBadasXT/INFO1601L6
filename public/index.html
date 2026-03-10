@@ -39,22 +39,58 @@
           <td>${record.id}</td>
           <td>${record.name}</td>
           <td>${record.brewery_type}</td>
-          <td>${record.website_url}</td>
+          <td>${record.website_url ?? ''}</td>
         </tr>`;
         }
 
         result.innerHTML = html;
       }
 
-      // testing the function
-      drawTable([
-        {
-          id: 1,
-          name: "bob's",
-          brewery_type: 'fire',
-          website_url: 'https://bobs.com',
-        },
-      ]);
+      async function loadData() {
+        const fallbackRecords = [
+          {
+            id: 3042,
+            name: "Mason's Brewing Company",
+            brewery_type: 'micro',
+            website_url: 'http://www.masonsbrewingcompany.com',
+          },
+          {
+            id: 1808,
+            name: 'Barrie Brewing Company',
+            brewery_type: 'planning',
+            website_url: null,
+          },
+          {
+            id: 6135,
+            name: 'Harty Brewing Company',
+            brewery_type: 'brewpub',
+            website_url: 'http://www.hartybrewco.com',
+          },
+          {
+            id: 7283,
+            name: 'Sunken City Brewing Co',
+            brewery_type: 'micro',
+            website_url: 'http://www.sunkencitybeer.com',
+          },
+          {
+            id: 2407,
+            name: 'Hairy Cow Brewing Co, LLC',
+            brewery_type: 'planning',
+            website_url: 'http://www.hairycowbrewing.com',
+          },
+        ];
+
+        try {
+          const response = await fetch('https://api.openbrewerydb.org/breweries?per_page=5');
+          const records = await response.json();
+          drawTable(records);
+        } catch (error) {
+          console.error('Unable to fetch brewery data, using fallback records.', error);
+          drawTable(fallbackRecords);
+        }
+      }
+
+      loadData();
     </script>
   </body>
 </html>
