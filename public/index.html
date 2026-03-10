@@ -1,38 +1,60 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>INFO1601 Lab 6</title>
-    <link href="style.css" rel="stylesheet" type="text/css" />
-  </head>
-  <body>
-    <h1>My Page</h1>
-
-    <input type="button" id="alertBtn" value="alert" onclick="alertFun()" />
-    <input type="button" value="confirm" onclick="confirmFun()" />
-    <input type="button" value="prompt" onclick="promptFun()" />
-
-    <span id="result"></span>
-
-    <h2>Task 5: DOM Event Listeners</h2>
-    <input id="myBtn" type="button" onclick="myFun()" value="click me" />
-
-    <h2>Exercise</h2>
-    <img
-      id="cageImg"
-      src="https://www.placecage.com/300/200"
-      alt="Nicolas Cage placeholder"
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
     />
+    <title>Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
 
-   <h2>Task 6: JS References</h2>
-    <p>
-      Open the browser console and click the button below to run object/array reference
-      examples and compare with a shallow copy using <code>Object.assign</code>.
-    </p>
-    <input id="runRefsBtn" type="button" value="Run Task 6 demo" />
+  <body>
+    <nav>
+      <div class="nav-wrapper teal" style="padding-left: 10px">
+        <a href="#!" class="brand-logo">Ajax Demo</a>
+      </div>
+    </nav>
+    <main class="row" style="padding: 40px">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>name</th>
+            <th>Type</th>
+            <th>website</th>
+          </tr>
+        </thead>
+        <tbody id="result"></tbody>
+      </table>
+    </main>
+    <script>
+      function drawTable(records) {
+        let result = document.querySelector('#result');
+        let html = '';
 
+        for (let record of records) {
+          html += `<tr>
+          <td>${record.id}</td>
+          <td>${record.name}</td>
+          <td>${record.brewery_type}</td>
+          <td>${record.website_url}</td>
+        </tr>`;
+        }
+
+        result.innerHTML = html;
+      }
+
+      // testing the function
+      drawTable([
+        {
+          id: 1,
+          name: "bob's",
+          brewery_type: 'fire',
+          website_url: 'https://bobs.com',
+        },
+      ]);
     </script>
-    <script src="script.js"></script>
   </body>
 </html>
