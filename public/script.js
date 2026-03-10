@@ -75,3 +75,56 @@ const cageImg = document.querySelector('#cageImg');
 if (cageImg) {
   cageImg.addEventListener('load', loaded);
 }
+
+function runTask6ReferencesDemo() {
+  console.log('--- Task 6: JS References ---');
+
+  const bobAccount = {
+    name: 'Bob',
+    balance: 10,
+  };
+
+  function add10(account) {
+    account.balance += 10;
+  }
+
+  console.log('bobAccount.balance before add10:', bobAccount.balance); // 10
+  add10(bobAccount);
+  console.log('bobAccount.balance after add10:', bobAccount.balance); // 20
+
+  const myobj = {
+    name: 'Bob',
+    balance: 20,
+    nested: {
+      status: 'active',
+    },
+  };
+
+  const obj2 = myobj;
+  obj2.name = 'Shelly';
+  console.log('obj2 changes myobj.name:', myobj.name); // Shelly
+
+  const obj3 = {};
+  Object.assign(obj3, myobj);
+
+  obj3.name = 'Smith';
+  console.log('myobj.name and obj3.name:', myobj.name, obj3.name); // Shelly, Smith
+
+  // Object.assign creates a shallow copy only.
+  obj3.nested.status = 'updated by obj3';
+  console.log('nested object shared in shallow copy:', myobj.nested.status, obj3.nested.status);
+
+  const arr1 = [1, 2, 3];
+  const arr2 = arr1;
+  arr2.push(4);
+  console.log('Array reference (arr1, arr2):', arr1, arr2);
+
+  const arr3 = [...arr1];
+  arr3.push(5);
+  console.log('Array copy with spread (arr1, arr3):', arr1, arr3);
+}
+
+const runRefsBtn = document.querySelector('#runRefsBtn');
+if (runRefsBtn) {
+  runRefsBtn.addEventListener('click', runTask6ReferencesDemo);
+}
